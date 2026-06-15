@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Задача 1: Время активности объявлений
 -- Определим аномальные значения (выбросы) по значению перцентилей:
+
 WITH limits AS (
     SELECT
         PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY total_area) AS total_area_limit,
@@ -17,7 +18,9 @@ WITH limits AS (
         PERCENTILE_CONT(0.01) WITHIN GROUP (ORDER BY ceiling_height) AS ceiling_height_limit_l
     FROM real_estate.flats
 ),
+    
 -- Найдём id объявлений, которые не содержат выбросы, также оставим пропущенные данные:
+    
 filtered_id AS(
     SELECT id
     FROM real_estate.flats
@@ -28,9 +31,9 @@ filtered_id AS(
         AND ((ceiling_height < (SELECT ceiling_height_limit_h FROM limits)
             AND ceiling_height > (SELECT ceiling_height_limit_l FROM limits)) OR ceiling_height IS NULL)
     ),
--- Продолжите запрос здесь
--- Используйте id объявлений (СТЕ filtered_id), которые не содержат выбросы при анализе данных
-
+    
+-- Использую id объявлений, которые не содержат выбросы при анализе данных
+    
 analysis_data AS (
     SELECT
         a.id,
@@ -76,7 +79,7 @@ ORDER BY
     region,
     exposition_category;
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
--- Задача 2: Сезонность объявлений                                                     ИСПРАВЛЕНО ПОСЛЕ РЕВЬЮ
+-- Задача 2: Сезонность объявлений                                                     
 -- Определим аномальные значения (выбросы) по значению перцентилей:
 WITH limits AS (
     SELECT
@@ -87,7 +90,9 @@ WITH limits AS (
         PERCENTILE_CONT(0.01) WITHIN GROUP (ORDER BY ceiling_height) AS ceiling_height_limit_l
     FROM real_estate.flats
 ),
+    
 -- Найдём id объявлений, которые не содержат выбросы, также оставим пропущенные данные:
+    
 filtered_id AS(
     SELECT id
     FROM real_estate.flats
@@ -98,8 +103,8 @@ filtered_id AS(
         AND ((ceiling_height < (SELECT ceiling_height_limit_h FROM limits)
             AND ceiling_height > (SELECT ceiling_height_limit_l FROM limits)) OR ceiling_height IS NULL)
     ),
--- Продолжите запрос здесь
--- Используйте id объявлений (СТЕ filtered_id), которые не содержат выбросы при анализе данных
+
+-- Используйю id объявлений, которые не содержат выбросы при анализе данных
     
 base AS (
     SELECT
